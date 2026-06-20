@@ -5,10 +5,11 @@ This module provides common fixtures for testing.
 """
 
 import asyncio
-from typing import AsyncGenerator, Generator
+from collections.abc import Generator
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+
 
 # Event loop fixture for async tests
 @pytest.fixture(scope="session")

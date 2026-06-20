@@ -5,11 +5,12 @@ These tests verify the consumer functionality without requiring
 a real RabbitMQ connection.
 """
 
-import pytest
+import contextlib
 from unittest.mock import AsyncMock, MagicMock, patch
-import asyncio
 
-from app.rabbitmq.consumer import BaseConsumer, RegisterConsumer, MarketingConsumer
+import pytest
+
+from app.rabbitmq.consumer import BaseConsumer, MarketingConsumer, RegisterConsumer
 
 
 class MockConsumer(BaseConsumer):
@@ -66,14 +67,17 @@ class TestBaseConsumer:
         )
         mock_queue.iterator.return_value.__aexit__ = AsyncMock()
 
-        with patch("app.rabbitmq.consumer.get_channel", return_value=mock_channel):
-            with patch("app.rabbitmq.consumer.setup_topology", return_value=(MagicMock(), {"test.queue": mock_queue})):
-                with patch("app.rabbitmq.consumer.asyncio.Future", side_effect=KeyboardInterrupt):
-                    # Run start (will be interrupted immediately)
-                    try:
-                        await consumer.start(prefetch_count=10)
-                    except KeyboardInterrupt:
-                        pass
+        with (
+            patch("app.rabbitmq.consumer.get_channel", return_value=mock_channel),
+            patch(
+                "app.rabbitmq.consumer.setup_topology",
+                return_value=(MagicMock(), {"test.queue": mock_queue}),
+            ),
+            patch("app.rabbitmq.consumer.asyncio.Future", side_effect=KeyboardInterrupt),
+            contextlib.suppress(KeyboardInterrupt),
+        ):
+            # Run start (will be interrupted immediately)
+            await consumer.start(prefetch_count=10)
 
         # Verify QoS was set
         mock_channel.set_qos.assert_called_once_with(prefetch_count=10)

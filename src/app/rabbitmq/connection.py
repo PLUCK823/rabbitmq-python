@@ -13,7 +13,7 @@ Key Concepts:
 from typing import TYPE_CHECKING
 
 import aio_pika
-from aio_pika import Connection, Channel
+from aio_pika.abc import AbstractChannel, AbstractRobustConnection
 
 from app.core.config import get_settings
 from app.core.logging import logger
@@ -22,17 +22,17 @@ if TYPE_CHECKING:
     pass
 
 # Global connection instance (singleton pattern)
-_connection: Connection | None = None
+_connection: AbstractRobustConnection | None = None
 
 
-async def get_connection() -> Connection:
+async def get_connection() -> AbstractRobustConnection:
     """Get or create a RabbitMQ connection.
 
     This function implements the singleton pattern to reuse connections.
     If a connection doesn't exist or is closed, it creates a new one.
 
     Returns:
-        Connection: An active RabbitMQ connection.
+        AbstractRobustConnection: An active RabbitMQ connection.
 
     Example:
         ```python
@@ -55,14 +55,14 @@ async def get_connection() -> Connection:
     return _connection
 
 
-async def get_channel() -> Channel:
+async def get_channel() -> AbstractChannel:
     """Get a new channel from the connection.
 
     Channels are lightweight and can be created per operation.
     Each channel is independent and can have its own settings.
 
     Returns:
-        Channel: A new RabbitMQ channel.
+        AbstractChannel: A new RabbitMQ channel.
 
     Example:
         ```python

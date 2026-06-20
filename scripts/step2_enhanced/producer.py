@@ -22,15 +22,15 @@ import json
 import aio_pika
 from aio_pika import DeliveryMode
 
-from app.rabbitmq.connection import get_channel, close_connection
-from app.rabbitmq.exchange import (
-    MailType,
-    QUEUE_REGISTER,
-    QUEUE_MARKETING,
-    ROUTING_KEY_REGISTER,
-    ROUTING_KEY_MARKETING,
-)
 from app.core.logging import logger
+from app.rabbitmq.connection import close_connection, get_channel
+from app.rabbitmq.exchange import (
+    QUEUE_MARKETING,
+    QUEUE_REGISTER,
+    ROUTING_KEY_MARKETING,
+    ROUTING_KEY_REGISTER,
+    MailType,
+)
 
 
 async def setup_durable_topology(channel: aio_pika.Channel) -> aio_pika.Exchange:
@@ -134,7 +134,7 @@ async def main() -> None:
             mail_type=MailType.REGISTER,
             email=f"user{i}@example.com",
             subject=f"Welcome User {i}!",
-            content=f"Welcome to our service!",
+            content="Welcome to our service!",
         )
 
         await publish_persistent_mail(
@@ -142,7 +142,7 @@ async def main() -> None:
             mail_type=MailType.MARKETING,
             email=f"customer{i}@example.com",
             subject=f"Special Offer {i}",
-            content=f"Check out our offer!",
+            content="Check out our offer!",
         )
 
     print()

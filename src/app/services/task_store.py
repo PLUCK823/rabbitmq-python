@@ -5,19 +5,18 @@ This module provides async SQLite storage for task status tracking.
 It demonstrates how to persist task state across application restarts.
 """
 
-import json
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from uuid import UUID, uuid4
 
 import aiosqlite
 
+from app.core.logging import logger
 from app.models.schemas import (
     MailType,
     TaskRecord,
     TaskStatus,
 )
-from app.core.logging import logger
 
 
 class TaskStore:
@@ -109,7 +108,7 @@ class TaskStore:
             raise RuntimeError("Database not initialized")
 
         task_id = uuid4()
-        now = datetime.utcnow().isoformat()
+        now = datetime.now(UTC).isoformat()
 
         await self._db.execute(
             """
@@ -151,7 +150,7 @@ class TaskStore:
         ) as cursor:
             row = await cursor.fetchone()
 
-        if not row:
+        if row is None:
             return None
 
         return self._row_to_record(row)
@@ -172,7 +171,7 @@ class TaskStore:
         if not self._db:
             raise RuntimeError("Database not initialized")
 
-        now = datetime.utcnow().isoformat()
+        now = datetime.now(UTC).isoformat()
 
         await self._db.execute(
             """
@@ -198,7 +197,7 @@ class TaskStore:
         if not self._db:
             raise RuntimeError("Database not initialized")
 
-        now = datetime.utcnow().isoformat()
+        now = datetime.now(UTC).isoformat()
 
         await self._db.execute(
             """
@@ -214,7 +213,7 @@ class TaskStore:
         task = await self.get_task(task_id)
         return task.retry_count if task else 0
 
-    def _row_to_record(self, row: tuple) -> TaskRecord:
+    def _row_to_record(self, row: aiosqlite.Row) -> TaskRecord:
         """Convert database row to TaskRecord.
 
         Args:

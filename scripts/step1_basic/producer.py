@@ -16,8 +16,8 @@ Usage:
 
 import asyncio
 
-from app.rabbitmq.publisher import publish_test_messages
 from app.rabbitmq.connection import close_connection
+from app.rabbitmq.publisher import publish_test_messages
 
 
 async def main() -> None:

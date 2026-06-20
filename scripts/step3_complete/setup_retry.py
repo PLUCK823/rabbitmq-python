@@ -23,9 +23,9 @@ import asyncio
 
 import aio_pika
 
-from app.rabbitmq.connection import get_channel, close_connection
 from app.core.config import get_settings
 from app.core.logging import logger
+from app.rabbitmq.connection import close_connection, get_channel
 
 
 async def setup_complete_topology() -> None:
@@ -102,9 +102,7 @@ async def setup_complete_topology() -> None:
         },
     )
     await retry_queue.bind(main_exchange, routing_key="mail.retry")
-    logger.info(
-        f"Declared retry.queue with TTL={settings.retry_ttl_seconds}s"
-    )
+    logger.info(f"Declared retry.queue with TTL={settings.retry_ttl_seconds}s")
 
     # Main processing queue
     # When messages fail, they go to retry.queue
@@ -138,7 +136,9 @@ async def setup_complete_topology() -> None:
     print("      └── mail.register → register.queue.complete")
     print("                             └── [FAIL] → retry.queue (TTL 5s)")
     print("                                              └── [EXPIRE] → mail.retry")
-    print("                                                              └── retry → register.queue.complete")
+    print(
+        "                                                              └── retry → register.queue.complete"
+    )
     print()
     print("  dlx.exchange (Direct)")
     print("      └── dead → dlq.queue (after 3 retries)")

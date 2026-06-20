@@ -39,7 +39,7 @@ class MailSender:
         self,
         email: str,
         subject: str,
-        content: str,
+        _content: str,
     ) -> bool:
         """Send an email (simulated).
 

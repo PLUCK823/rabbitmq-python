@@ -5,13 +5,13 @@ This module defines the data models for the Mail Center API.
 """
 
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, Field
 
 
-class MailType(str, Enum):
+class MailType(StrEnum):
     """Supported mail types."""
 
     REGISTER = "register"
@@ -20,7 +20,7 @@ class MailType(str, Enum):
     SYSTEM = "system"
 
 
-class TaskStatus(str, Enum):
+class TaskStatus(StrEnum):
     """Task processing status."""
 
     PENDING = "pending"

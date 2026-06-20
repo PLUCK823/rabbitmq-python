@@ -17,13 +17,13 @@ from fastapi import FastAPI
 
 from app.api.router import api_router
 from app.core.logging import logger
-from app.rabbitmq.connection import get_channel, close_connection
+from app.rabbitmq.connection import close_connection, get_channel
 from app.rabbitmq.exchange import setup_topology
 from app.services.task_store import task_store
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     """Application lifespan manager.
 
     Handles startup and shutdown events.
@@ -62,11 +62,11 @@ app.include_router(api_router)
 
 
 @app.get("/")
-async def root() -> dict:
+async def root() -> dict[str, str]:
     """Root endpoint.
 
     Returns:
-        dict: Welcome message.
+        dict[str, str]: Welcome message.
     """
     return {
         "message": "Welcome to Mail Center API",
@@ -76,11 +76,11 @@ async def root() -> dict:
 
 
 @app.get("/health")
-async def health() -> dict:
+async def health() -> dict[str, str]:
     """Health check endpoint.
 
     Returns:
-        dict: Health status.
+        dict[str, str]: Health status.
     """
     return {"status": "healthy"}
 

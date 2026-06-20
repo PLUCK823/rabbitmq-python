@@ -17,8 +17,8 @@ Note: Start RabbitMQ before running this worker.
 
 import asyncio
 
-from app.rabbitmq.consumer import RegisterConsumer
 from app.rabbitmq.connection import close_connection
+from app.rabbitmq.consumer import RegisterConsumer
 
 
 async def main() -> None:

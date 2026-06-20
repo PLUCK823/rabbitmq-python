@@ -23,9 +23,9 @@ import json
 import aio_pika
 from aio_pika import DeliveryMode
 
-from app.rabbitmq.connection import get_channel, close_connection
-from app.rabbitmq.exchange import MailType
 from app.core.logging import logger
+from app.rabbitmq.connection import close_connection, get_channel
+from app.rabbitmq.exchange import MailType
 
 
 async def publish_with_retry_headers(

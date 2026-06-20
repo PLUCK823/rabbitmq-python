@@ -26,11 +26,11 @@ import json
 import random
 
 import aio_pika
-from aio_pika import IncomingMessage, DeliveryMode
+from aio_pika import DeliveryMode, IncomingMessage
 
-from app.rabbitmq.connection import get_channel, close_connection
 from app.core.config import get_settings
 from app.core.logging import logger
+from app.rabbitmq.connection import close_connection, get_channel
 
 
 async def process_with_retry(message: IncomingMessage) -> None:
@@ -118,7 +118,7 @@ async def main() -> None:
     print("  2. TTL Delay: Messages wait in retry.queue")
     print("  3. DLQ: Failed messages after max retries")
     print()
-    print(f"Configuration:")
+    print("Configuration:")
     print(f"  Max retries: {settings.max_retry_count}")
     print(f"  Retry TTL: {settings.retry_ttl_seconds}s")
     print()

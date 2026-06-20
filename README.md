@@ -6,11 +6,11 @@
 
 本项目是一个循序渐进的 RabbitMQ 学习教程，通过三个递进的步骤覆盖 RabbitMQ 的所有核心知识点：
 
-| 步骤 | 知识点 | 代码量 |
-|------|--------|--------|
+| 步骤   | 知识点                                                          | 代码量  |
+| ------ | --------------------------------------------------------------- | ------- |
 | Step 1 | Producer, Consumer, Queue, Topic Exchange, Routing Key, Binding | ~200 行 |
-| Step 2 | ACK, NACK, Durable, Persistent Message, Prefetch | 增强 |
-| Step 3 | DLX (Dead Letter Exchange), TTL, Delay Queue, Retry Pattern | 完整 |
+| Step 2 | ACK, NACK, Durable, Persistent Message, Prefetch                | 增强    |
+| Step 3 | DLX (Dead Letter Exchange), TTL, Delay Queue, Retry Pattern     | 完整    |
 
 ## 前置要求
 
@@ -30,7 +30,7 @@ docker run -d --name rabbitmq \
 ```
 
 - **5672**: RabbitMQ 消息端口
-- **15672**: 管理界面 (http://localhost:15672, guest/guest)
+- **15672**: 管理界面 (<http://localhost:15672>, guest/guest)
 
 ### 2. 安装依赖
 
@@ -42,16 +42,19 @@ uv sync
 ### 3. 运行 Step 1 示例
 
 **终端 1 - 启动生产者：**
+
 ```bash
 uv run python scripts/step1_basic/producer.py
 ```
 
 **终端 2 - 启动注册邮件消费者：**
+
 ```bash
 uv run python scripts/step1_basic/worker_register.py
 ```
 
 **终端 3 - 启动营销邮件消费者：**
+
 ```bash
 uv run python scripts/step1_basic/worker_marketing.py
 ```
@@ -71,15 +74,15 @@ uv run python scripts/step1_basic/worker_marketing.py
 
 **代码文件：**
 
-| 文件 | 说明 |
-|------|------|
-| [src/app/rabbitmq/connection.py](src/app/rabbitmq/connection.py) | RabbitMQ 连接管理 |
-| [src/app/rabbitmq/exchange.py](src/app/rabbitmq/exchange.py) | Exchange 和 Queue 声明 |
-| [src/app/rabbitmq/publisher.py](src/app/rabbitmq/publisher.py) | 消息发布者 |
-| [src/app/rabbitmq/consumer.py](src/app/rabbitmq/consumer.py) | 消息消费者基类 |
-| [scripts/step1_basic/producer.py](scripts/step1_basic/producer.py) | 生产者脚本 |
-| [scripts/step1_basic/worker_register.py](scripts/step1_basic/worker_register.py) | 注册邮件 Worker |
-| [scripts/step1_basic/worker_marketing.py](scripts/step1_basic/worker_marketing.py) | 营销邮件 Worker |
+| 文件                                                                               | 说明                   |
+| ---------------------------------------------------------------------------------- | ---------------------- |
+| [src/app/rabbitmq/connection.py](src/app/rabbitmq/connection.py)                   | RabbitMQ 连接管理      |
+| [src/app/rabbitmq/exchange.py](src/app/rabbitmq/exchange.py)                       | Exchange 和 Queue 声明 |
+| [src/app/rabbitmq/publisher.py](src/app/rabbitmq/publisher.py)                     | 消息发布者             |
+| [src/app/rabbitmq/consumer.py](src/app/rabbitmq/consumer.py)                       | 消息消费者基类         |
+| [scripts/step1_basic/producer.py](scripts/step1_basic/producer.py)                 | 生产者脚本             |
+| [scripts/step1_basic/worker_register.py](scripts/step1_basic/worker_register.py)   | 注册邮件 Worker        |
+| [scripts/step1_basic/worker_marketing.py](scripts/step1_basic/worker_marketing.py) | 营销邮件 Worker        |
 
 **练习：**
 
@@ -99,10 +102,10 @@ uv run python scripts/step1_basic/worker_marketing.py
 
 **代码文件：**
 
-| 文件 | 说明 |
-|------|------|
-| [scripts/step2_enhanced/producer.py](scripts/step2_enhanced/producer.py) | 持久化消息发布 |
-| [scripts/step2_enhanced/worker.py](scripts/step2_enhanced/worker.py) | 带 ACK/NACK 的消费者 |
+| 文件                                                                     | 说明                 |
+| ------------------------------------------------------------------------ | -------------------- |
+| [scripts/step2_enhanced/producer.py](scripts/step2_enhanced/producer.py) | 持久化消息发布       |
+| [scripts/step2_enhanced/worker.py](scripts/step2_enhanced/worker.py)     | 带 ACK/NACK 的消费者 |
 
 **练习：**
 
@@ -121,15 +124,15 @@ uv run python scripts/step1_basic/worker_marketing.py
 
 **代码文件：**
 
-| 文件 | 说明 |
-|------|------|
+| 文件                                                                           | 说明                    |
+| ------------------------------------------------------------------------------ | ----------------------- |
 | [scripts/step3_complete/setup_retry.py](scripts/step3_complete/setup_retry.py) | 设置 DLX 和延迟队列拓扑 |
-| [scripts/step3_complete/producer.py](scripts/step3_complete/producer.py) | 带重试跟踪的消息发布 |
-| [scripts/step3_complete/worker.py](scripts/step3_complete/worker.py) | 完整重试逻辑的消费者 |
+| [scripts/step3_complete/producer.py](scripts/step3_complete/producer.py)       | 带重试跟踪的消息发布    |
+| [scripts/step3_complete/worker.py](scripts/step3_complete/worker.py)           | 完整重试逻辑的消费者    |
 
 **消息流程：**
 
-```
+```text
 Producer → Exchange → Queue → Worker
                             ↓ [失败]
                        Retry Queue (TTL 5s)
@@ -157,7 +160,7 @@ Producer → Exchange → Queue → Worker
 uv run uvicorn app.main:app --reload
 ```
 
-访问 http://localhost:8000/docs 查看 API 文档。
+访问 <http://localhost:8000/docs> 查看 API 文档。
 
 ### API 端点
 
@@ -177,6 +180,7 @@ curl -X POST http://localhost:8000/api/mail/send \
 ```
 
 响应：
+
 ```json
 {
   "task_id": "123e4567-e89b-12d3-a456-426614174000",
@@ -193,6 +197,7 @@ curl http://localhost:8000/api/mail/task/123e4567-e89b-12d3-a456-426614174000
 ```
 
 响应：
+
 ```json
 {
   "task_id": "123e4567-e89b-12d3-a456-426614174000",
@@ -207,7 +212,7 @@ curl http://localhost:8000/api/mail/task/123e4567-e89b-12d3-a456-426614174000
 
 ### 项目结构
 
-```
+``` text
 rabbitmq-python/
 ├── src/app/
 │   ├── core/              # 配置和日志
@@ -266,32 +271,32 @@ uv run pytest --cov=app --cov-report=html
 cp .env.example .env
 ```
 
-| 变量 | 默认值 | 说明 |
-|------|--------|------|
-| RABBITMQ_URL | amqp://guest:guest@localhost:5672/ | RabbitMQ 连接 URL |
-| EXCHANGE_NAME | mail.topic | 主交换机名称 |
-| PREFETCH_COUNT | 10 | 消费者预取数量 |
-| MAX_RETRY_COUNT | 3 | 最大重试次数 |
-| RETRY_TTL_SECONDS | 5 | 重试延迟秒数 |
+| 变量              | 默认值                             | 说明              |
+| ----------------- | ---------------------------------- | ----------------- |
+| RABBITMQ_URL      | amqp://guest:guest@localhost:5672/ | RabbitMQ 连接 URL |
+| EXCHANGE_NAME     | mail.topic                         | 主交换机名称      |
+| PREFETCH_COUNT    | 10                                 | 消费者预取数量    |
+| MAX_RETRY_COUNT   | 3                                  | 最大重试次数      |
+| RETRY_TTL_SECONDS | 5                                  | 重试延迟秒数      |
 
 ## RabbitMQ 知识点映射
 
-| RabbitMQ 概念 | 项目实现 | 文件 |
-|---------------|----------|------|
-| Producer | publish_mail() | publisher.py |
-| Consumer | BaseConsumer | consumer.py |
-| Topic Exchange | mail.topic | exchange.py |
-| Routing Key | mail.register, mail.marketing, ... | exchange.py |
-| Queue | register.queue, marketing.queue, ... | exchange.py |
-| Binding | queue.bind(exchange, routing_key) | exchange.py |
-| ACK | message.ack() | worker.py (Step 2) |
-| NACK | message.nack(requeue=False) | worker.py (Step 2) |
-| Durable | durable=True | producer.py (Step 2) |
-| Persistent | DeliveryMode.PERSISTENT | producer.py (Step 2) |
-| Prefetch | channel.set_qos(prefetch_count) | consumer.py |
-| DLX | x-dead-letter-exchange | setup_retry.py (Step 3) |
-| TTL | x-message-ttl | setup_retry.py (Step 3) |
-| Delay Queue | retry.queue with TTL | setup_retry.py (Step 3) |
+| RabbitMQ 概念  | 项目实现                             | 文件                    |
+| -------------- | ------------------------------------ | ----------------------- |
+| Producer       | publish_mail()                       | publisher.py            |
+| Consumer       | BaseConsumer                         | consumer.py             |
+| Topic Exchange | mail.topic                           | exchange.py             |
+| Routing Key    | mail.register, mail.marketing, ...   | exchange.py             |
+| Queue          | register.queue, marketing.queue, ... | exchange.py             |
+| Binding        | queue.bind(exchange, routing_key)    | exchange.py             |
+| ACK            | message.ack()                        | worker.py (Step 2)      |
+| NACK           | message.nack(requeue=False)          | worker.py (Step 2)      |
+| Durable        | durable=True                         | producer.py (Step 2)    |
+| Persistent     | DeliveryMode.PERSISTENT              | producer.py (Step 2)    |
+| Prefetch       | channel.set_qos(prefetch_count)      | consumer.py             |
+| DLX            | x-dead-letter-exchange               | setup_retry.py (Step 3) |
+| TTL            | x-message-ttl                        | setup_retry.py (Step 3) |
+| Delay Queue    | retry.queue with TTL                 | setup_retry.py (Step 3) |
 
 ## 常见问题
 

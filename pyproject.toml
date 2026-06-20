@@ -75,7 +75,6 @@ pythonPlatform = "Darwin"
 include = ["src"]
 exclude = ["**/node_modules", "**/__pycache__"]
 reportMissingImports = true
-reportMissingTypeStages = true
 reportUnusedImport = true
 reportUnusedClass = true
 reportUnusedFunction = true

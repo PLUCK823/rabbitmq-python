@@ -13,15 +13,14 @@ Key Concepts:
 import json
 from typing import Any
 
-import aio_pika
-from aio_pika import Message, DeliveryMode
+from aio_pika import Message
 
+from app.core.logging import logger
 from app.rabbitmq.connection import get_channel
 from app.rabbitmq.exchange import (
     MailType,
     setup_topology,
 )
-from app.core.logging import logger
 
 
 async def publish_mail(

@@ -23,12 +23,11 @@ import asyncio
 import json
 import random
 
-import aio_pika
 from aio_pika import IncomingMessage
 
-from app.rabbitmq.connection import get_channel, close_connection
-from app.rabbitmq.exchange import QUEUE_REGISTER, QUEUE_MARKETING
 from app.core.logging import logger
+from app.rabbitmq.connection import close_connection, get_channel
+from app.rabbitmq.exchange import QUEUE_REGISTER
 
 
 async def process_with_ack(message: IncomingMessage, queue_name: str) -> None:

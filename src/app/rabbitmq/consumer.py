@@ -18,12 +18,11 @@ import json
 from abc import ABC, abstractmethod
 from typing import Any
 
-import aio_pika
-from aio_pika import IncomingMessage
+from aio_pika.abc import AbstractIncomingMessage
 
-from app.rabbitmq.connection import get_channel
-from app.rabbitmq.exchange import setup_topology, QUEUE_REGISTER, QUEUE_MARKETING
 from app.core.logging import logger
+from app.rabbitmq.connection import get_channel
+from app.rabbitmq.exchange import QUEUE_MARKETING, QUEUE_REGISTER, setup_topology
 
 
 class BaseConsumer(ABC):
@@ -44,7 +43,7 @@ class BaseConsumer(ABC):
 
     queue_name: str = ""
 
-    async def on_message(self, message: IncomingMessage) -> None:
+    async def on_message(self, message: AbstractIncomingMessage) -> None:
         """Callback when a message is received.
 
         This method handles message parsing and error handling.

@@ -8,16 +8,16 @@ from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
 
+from app.core.logging import logger
 from app.models.schemas import (
     MailRequest,
     MailTaskResponse,
-    TaskStatusResponse,
     TaskStatus,
+    TaskStatusResponse,
 )
-from app.services.task_store import task_store
-from app.rabbitmq.publisher import publish_mail
 from app.rabbitmq.exchange import MailType as RabbitMailType
-from app.core.logging import logger
+from app.rabbitmq.publisher import publish_mail
+from app.services.task_store import task_store
 
 router = APIRouter(prefix="/api/mail", tags=["mail"])
 

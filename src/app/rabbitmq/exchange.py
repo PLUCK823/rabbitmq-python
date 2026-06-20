@@ -17,16 +17,16 @@ Routing Keys:
     - mail.system    → system.queue
 """
 
-from enum import Enum
+from enum import StrEnum
 
 import aio_pika
-from aio_pika import Exchange, Queue, Channel
+from aio_pika.abc import AbstractChannel, AbstractExchange, AbstractQueue
 
 from app.core.config import get_settings
 from app.core.logging import logger
 
 
-class MailType(str, Enum):
+class MailType(StrEnum):
     """Supported mail types with corresponding routing keys."""
 
     REGISTER = "register"
@@ -56,7 +56,7 @@ ROUTING_KEY_MARKETING = "mail.marketing"
 ROUTING_KEY_SYSTEM = "mail.system"
 
 
-async def declare_exchange(channel: Channel) -> Exchange:
+async def declare_exchange(channel: AbstractChannel) -> AbstractExchange:
     """Declare the main topic exchange.
 
     A Topic Exchange routes messages to queues based on routing key patterns.
@@ -68,7 +68,7 @@ async def declare_exchange(channel: Channel) -> Exchange:
         channel: RabbitMQ channel.
 
     Returns:
-        Exchange: The declared exchange.
+        AbstractExchange: The declared exchange.
 
     Example:
         ```python
@@ -89,7 +89,7 @@ async def declare_exchange(channel: Channel) -> Exchange:
     return exchange
 
 
-async def declare_queues(channel: Channel) -> dict[str, Queue]:
+async def declare_queues(channel: AbstractChannel) -> dict[str, AbstractQueue]:
     """Declare all queues for different mail types.
 
     Each queue receives messages for a specific mail type.
@@ -98,7 +98,7 @@ async def declare_queues(channel: Channel) -> dict[str, Queue]:
         channel: RabbitMQ channel.
 
     Returns:
-        dict[str, Queue]: Mapping of queue names to Queue objects.
+        dict[str, AbstractQueue]: Mapping of queue names to Queue objects.
 
     Example:
         ```python
@@ -106,7 +106,7 @@ async def declare_queues(channel: Channel) -> dict[str, Queue]:
         register_queue = queues[QUEUE_REGISTER]
         ```
     """
-    queues = {}
+    queues: dict[str, AbstractQueue] = {}
 
     queue_names = [
         QUEUE_REGISTER,
@@ -127,8 +127,8 @@ async def declare_queues(channel: Channel) -> dict[str, Queue]:
 
 
 async def setup_bindings(
-    exchange: Exchange,
-    queues: dict[str, Queue],
+    exchange: AbstractExchange,
+    queues: dict[str, AbstractQueue],
 ) -> None:
     """Bind queues to the exchange with routing keys.
 
@@ -162,7 +162,9 @@ async def setup_bindings(
         logger.info(f"Bound {queue_name} to {routing_key}")
 
 
-async def setup_topology(channel: Channel) -> tuple[Exchange, dict[str, Queue]]:
+async def setup_topology(
+    channel: AbstractChannel,
+) -> tuple[AbstractExchange, dict[str, AbstractQueue]]:
     """Set up the complete RabbitMQ topology.
 
     This is the main entry point for setting up exchanges, queues, and bindings.
@@ -172,7 +174,7 @@ async def setup_topology(channel: Channel) -> tuple[Exchange, dict[str, Queue]]:
         channel: RabbitMQ channel.
 
     Returns:
-        tuple: (Exchange, dict of Queue name to Queue object)
+        tuple: (AbstractExchange, dict of Queue name to AbstractQueue object)
 
     Example:
         ```python
